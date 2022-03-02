@@ -17,7 +17,7 @@ class UserController extends Controller
         return [
             'user' => $user, 
             'articles' => Article::where('user_id', $id)->get(), 
-            'avatar' => $user->image ? asset('avatars/'.$user->image->name) : null
+            'avatar' => $user->image ? asset('images/'.$user->image->name) : null
         ];
     }
 
