@@ -40,7 +40,7 @@ function Show({ auth, errors, article, comments, bookmarkedUsers, canControl }) 
 
     return (
         <>
-            {article && deleteSelect && <Delete onCancel={handleCancel} onDelete={handleDelete} />}
+            {article && deleteSelect && <Delete deleteSelect={deleteSelect} onCancel={handleCancel} onDelete={handleDelete} />}
             <Layout
                 auth={auth}
                 errors={errors}
