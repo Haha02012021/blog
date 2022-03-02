@@ -1,0 +1,42 @@
+.optionitem {
+    width: fit-content;
+    margin-right: 1rem;
+    position: relative;
+}
+
+.optionlink {
+    width: fit-content;
+    text-transform: uppercase;
+    font-weight: 800;
+}
+
+.optionlink::after {
+    content: "";
+    left: 0;
+    bottom: -8px;
+    width: 0;
+    height: 2px;
+    background-color: white;
+    display: block;
+    transition: width .3s ease;
+    position: absolute;
+}
+
+.optionlink:hover::after {
+    width: 100%;
+}
+
+::after {
+    box-sizing: border-box;
+}
+
+a.optionlink.active::after {
+    content: "";
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: white;
+    display: block;
+    position: absolute;
+    width: 100%;
+}

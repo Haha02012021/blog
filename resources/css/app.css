@@ -1,0 +1,19 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@layer base {
+  h1 {
+    @apply text-2xl;
+  }
+  h2 {
+    @apply text-xl;
+  }
+  /* ... */
+}
+
+@layer components {
+  .divide-line {
+    @apply flex items-center justify-between before:h-[1px] before:w-[28%] before:bg-gray-400 before:inline-flex after:h-[1px] after:w-[28%] after:bg-gray-400 after:inline-flex
+  }
+}
