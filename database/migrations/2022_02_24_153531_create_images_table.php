@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->morphs('imageable');
+            $table->string('role')->nullable();
             $table->timestamps();
         });
     }

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Article;
 use App\Models\Image;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
@@ -17,8 +18,21 @@ class UserController extends Controller
         return [
             'user' => $user, 
             'articles' => Article::where('user_id', $id)->get(), 
-            'avatar' => $user->image ? asset('images/'.$user->image->name) : null
+            'avatar' => $user->getAvatar ? asset('images/'.$user->getAvatar->name) : null
         ];
+    }
+
+    public function get_article_images($id) {
+        $user = User::findOrFail($id);
+
+        $images = [];
+
+        if ($user->get_article_images) {
+            foreach($user->get_article_images as $image) {
+                array_push($images, asset('images/'.$image->name));
+            }
+        }
+        return $images;
     }
 
     public function show_articles($id) {

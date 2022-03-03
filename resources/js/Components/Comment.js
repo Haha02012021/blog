@@ -120,10 +120,9 @@ function CommentEditor({ author, authorAvatar, articleId }) {
                                 >
                                     {active[0] ? (
                                         <div className="relative">
-                                            <EditorProvider>
+                                            <EditorProvider handleChange={newValue => handleChangeComment(newValue)}>
                                                 <EditorProvider.Editor
                                                     value={content}
-                                                    handleChange={newValue => handleChangeComment(newValue)}
                                                     hideToolbar={true}
                                                     //height={160}
                                                 />

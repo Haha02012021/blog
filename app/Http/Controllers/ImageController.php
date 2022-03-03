@@ -11,27 +11,34 @@ use Illuminate\Support\Facades\Storage;
 class ImageController extends Controller
 {
     public function upload(Request $request) {
-        $request->validate([
-            'imageable_id' => 'required|integer',
-            'imageable_type' => 'required|string',
-            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
-        ]);
-        
-        $imageName = time().'.'.$request->image->getClientOriginalExtension();
+        $names = [];
 
-        $request->image->move(public_path('images/'), $imageName);
+        if($request->hasFile('image'))
+        {
+            foreach($request->file('image') as $image)
+            {
+                $imageName = time().'.'.$image->getClientOriginalExtension();
 
-        Image::create([
-            'name' => $imageName,
-            'imageable_id' => $request->imageable_id,
-            'imageable_type' => 'App\\Models\\'.$request->imageable_type
-        ]);
+                $image->move(public_path('images/'), $imageName);
+                
+                Image::create([
+                    'name' => $imageName,
+                    'imageable_id' => $request->imageable_id,
+                    'imageable_type' => 'App\\Models\\'.$request->imageable_type,
+                    'role' => $request->role
+                ]);
 
-        return $imageName;
-    }
+                array_push($names, $imageName);
+            }
+        }
 
-    public function loadMany(Request $request) {
+        $imgPaths = [];
 
-        return Image::where('imageable_type', 'Auth\\Models\\'.$request->type)->get();
+        foreach($names as $name) {
+            array_push($imgPaths, asset('images/'.$name));
+        }
+
+        return $imgPaths;
+    
     }
 }

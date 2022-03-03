@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import Button from "@/Components/Button";
 import Input from "@/Components/Input";
 import Label from "@/Components/Label";
@@ -8,7 +8,7 @@ import { configEditorArticle } from "../../../../constant/editor";
 import { useForm, Head } from "@inertiajs/inertia-react";
 import EditorProvider from "@/Components/Editor";
 
-export default function Add(props) {
+function Add(props) {
     const { data, setData, post, processing, errors, reset } = useForm({
         user_id: props.auth.user.id,
         title: props.article ? props.article.title : "",
@@ -20,6 +20,7 @@ export default function Add(props) {
     }
 
     const handleChangeEditor = (newValue) => {
+        console.log(newValue);
         setData('content', newValue)
     }
 
@@ -61,11 +62,13 @@ export default function Add(props) {
                     <Label
                         value="Nội dung"
                     />
-                    <EditorProvider>
+                    <EditorProvider handleChange={(newValue) => handleChangeEditor(newValue)}
+>
                         <EditorProvider.Editor
                             value={data.content}
-                            handleChange={(newValue) => handleChangeEditor(newValue)}
                             height={520}
+                            authorId={props.auth.user.id}
+                            imagesLib={props.imagesLib}
                         />
                     </EditorProvider>
                 </div>
@@ -80,3 +83,5 @@ export default function Add(props) {
     )
 
 }
+
+export default memo(Add)

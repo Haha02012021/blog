@@ -28,9 +28,10 @@ export default function Edit({ auth, errors }) {
         const file = e.target.avatar.files[0]
 
         const dataImage = new FormData()
-        dataImage.append('image', file)
+        dataImage.append('image[]', file)
         dataImage.append('imageable_id', auth.user.id)
         dataImage.append('imageable_type', 'User')
+        dataImage.append('role', 'avatar')
         console.log(file);
 
         axios.post("/image/upload", dataImage)

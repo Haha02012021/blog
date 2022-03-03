@@ -56,8 +56,13 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(Article::class, 'user_article', 'bookmarked_user_id', 'article_id');
     }
 
-    public function image()
+    public function getAvatar()
     {
-        return $this->morphOne(Image::class, 'imageable')->latestOfMany();
+        return $this->morphOne(Image::class, 'imageable')->where('role', 'avatar')->latest();
+    }
+
+    public function get_article_images()
+    {
+        return $this->morphMany(Image::class, 'imageable')->where('role', 'article');
     }
 }

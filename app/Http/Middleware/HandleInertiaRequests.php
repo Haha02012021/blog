@@ -37,8 +37,8 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
                 'avatar' => $request->user() ? 
-                                ($request->user()->image ? 
-                                    asset('images/'.$request->user()->image->name) : 
+                                ($request->user()->getAvatar ? 
+                                    asset('images/'.$request->user()->getAvatar->name) : 
                                     null) : 
                             null
             ],
