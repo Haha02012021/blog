@@ -2,7 +2,6 @@ import "../../css/editor.css"
 import MDEditor, { commands, image } from "@uiw/react-md-editor";
 import { AiOutlineFileImage } from "react-icons/ai";
 import { Children, createContext, useContext, useEffect, useState } from "react";
-import { FileUploader } from "react-drag-drop-files";
 import Button from "./Button";
 import axios from "axios";
 import Dropzone from "react-dropzone";
@@ -35,7 +34,7 @@ function Editor({
         <>
             {showUploadImg && <>
                 <UploadImg authorId={authorId} imagesLib={imagesLib} />
-                <div className="fixed inset-0 z-20" onClick={() => setShowUploadImg(false)}></div>
+                <div className="fixed inset-0 z-10" onClick={() => setShowUploadImg(false)}></div>
             </>}
             <div className="w-[100%] text-1xl">
                 <MDEditor
@@ -115,25 +114,17 @@ function UploadImg({ authorId, imagesLib }) {
 
     return (
         <>
-            <div className="absolute z-40 w-[100vw] h-[100vh] right-0 top-0 bg-gray-600/50">
+            <div className="absolute z-20 w-[100vw] h-[100vh] right-0 top-0 bg-gray-600/50">
                 <div className="h-[100%] flex items-center justify-center">
-                    <div className="bg-white w-fit p-4 rounded-md z-50">
+                    <div className="bg-white w-fit p-4 rounded-md">
                         <div>
-                            {/*<FileUploader
-                                handleChange={handleChangeFiles}
-                                name="images[]"
-                                type={fileTypes}
-                                multiple={true}
-                                onDrop={(drop) => console.log(drop)}
-                            />*/}
-
                             <Dropzone
                                 onDrop={handleChangeFiles}
                                 accept="image/*"
                             >
                                 {({ getRootProps, getInputProps }) => (
                                     <div {...getRootProps({ className: "text-center p-5 bg-gray-100 text-gray-500 mb-5 text-center p-5 border-dashed border-gray-200 bg-gray-100 text-gray-500 mb-5 border-2" })}>
-                                        <input {...getInputProps()} />
+                                        <input {...getInputProps()} autoFocus/>
                                         <p>Drag'n'drop files, or click to select files</p>
                                     </div>
                                 )}
@@ -148,13 +139,12 @@ function UploadImg({ authorId, imagesLib }) {
                                 })}
                             </div>
                         )}
-                        <div>
+                        <div className="flex justify-end">
                             <Button type="button" onClick={handleOK}>OK</Button>
                         </div>
                     </div>
                 </div>
             </div>
-            {showUploadImg && <div className="fixed inset-0 z-40" onClick={() => setShowUploadImg(false)}></div>}
         </>
     )
 }

@@ -654,6 +654,9 @@ select {
 .right-16 {
   right: 4rem;
 }
+.right-24 {
+  right: 6rem;
+}
 .z-0 {
   z-index: 0;
 }
@@ -1257,6 +1260,9 @@ select {
 }
 .pt-20 {
   padding-top: 5rem;
+}
+.pb-16 {
+  padding-bottom: 4rem;
 }
 .text-left {
   text-align: left;

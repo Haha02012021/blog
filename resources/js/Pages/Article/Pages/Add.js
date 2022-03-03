@@ -40,7 +40,7 @@ function Add(props) {
             errors={props.errors}
         >
             <Head title="Bài viết mới" />
-            <form onSubmit={handleSubmit} className="mx-24">
+            <form onSubmit={handleSubmit} className="mx-24 h-fit pt-4">
                 <div className="pt-4">
                     <Label
                         forInput="title"
@@ -73,8 +73,8 @@ function Add(props) {
                     </EditorProvider>
                 </div>
 
-                <div className="py-4">
-                    <Button className="block right-16 absolute" processing={processing}>
+                <div className="pt-4 pb-16">
+                    <Button className="right-24 absolute" processing={processing}>
                         {props.article ? "Lưu bài" : "Đăng bài"}
                     </Button>
                 </div>
