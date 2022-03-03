@@ -7,7 +7,7 @@ import { createContext, useContext, useState } from "react";
 import { BsChat } from "react-icons/bs";
 import { HiOutlineChatAlt2, HiOutlineEmojiHappy } from "react-icons/hi";
 import Button from "./Button";
-import Editor from "./Editor";
+import EditorProvider from "./Editor";
 import CustomPagination from "./Pagination";
 
 const CommentContext = createContext()
@@ -109,9 +109,9 @@ function CommentEditor({ author, authorAvatar, articleId }) {
                                     {authorAvatar ? (
                                         <img src={authorAvatar} className="rounded-full" />
                                     ) : (
-                                        <>
+                                        <div className="flex items-center justify-center h-full text-[20px]">
                                             { author.name.substring(0, 1) }
-                                        </>
+                                        </div>
                                     )}
                                 </div>
                                 <form 
@@ -120,11 +120,15 @@ function CommentEditor({ author, authorAvatar, articleId }) {
                                 >
                                     {active[0] ? (
                                         <div className="relative">
-                                            <Editor
-                                                value={content}
-                                                handleChange={newValue => handleChangeComment(newValue)}
-                                                hideToolbar={true}
-                                            />
+                                            <EditorProvider>
+                                                <EditorProvider.Editor
+                                                    value={content}
+                                                    handleChange={newValue => handleChangeComment(newValue)}
+                                                    hideToolbar={true}
+                                                    //height={160}
+                                                />
+                                            </EditorProvider>
+                                            
                                             <div className="absolute top-[64px] right-0 text-2xl">
                                                 <div
                                                     className="flex justify-end cursor-pointer"

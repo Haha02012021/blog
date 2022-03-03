@@ -87,7 +87,7 @@ function Show({ auth, errors, article, comments, bookmarkedUsers, canControl }) 
                                                     </div>
                                                     <MDEditor.Markdown source={article.content}/>
                                                     <Time
-                                                        className="block text-right"
+                                                        className="block text-right pt-4"
                                                         time={`Cập nhật lần cuối: ${time.updated}`}
                                                     />
                                                 </div>
