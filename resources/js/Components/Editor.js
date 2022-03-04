@@ -26,14 +26,13 @@ function Editor({
     hideToolbar = false,
     placeholder = "Nhập nội dung vào đây",
     authorId,
-    imagesLib
 }) {
     const { showUploadImg, setShowUploadImg, handleChange } = useContext(EditorContext)
 
     return (
         <>
             {showUploadImg && <>
-                <UploadImg authorId={authorId} imagesLib={imagesLib} />
+                <UploadImg authorId={authorId} />
                 <div className="fixed inset-0 z-10" onClick={() => setShowUploadImg(false)}></div>
             </>}
             <div className="w-[100%] text-1xl">
@@ -71,10 +70,15 @@ function Editor({
 
 const fileTypes = ["JPG", "PNG", "GIF"];
 
-function UploadImg({ authorId, imagesLib }) {
-    console.log(imagesLib);
-    const { showUploadImg, setShowUploadImg, handleChange } = useContext(EditorContext)
-    const [lib, setLib] = useState(imagesLib)
+function UploadImg({ authorId }) {
+    const { setShowUploadImg, handleChange } = useContext(EditorContext)
+    const [lib, setLib] = useState([])
+
+    useEffect(() => {
+        axios.get(`/user/${authorId}/article-images`)
+            .then(res => setLib(res.data))
+            .catch(err => console.log(err))
+    }, [])
 
     const handleChangeFiles = (newFiles) => {
         console.log(newFiles);
@@ -95,7 +99,7 @@ function UploadImg({ authorId, imagesLib }) {
                 .then((res) => {
                     const data = res.data
                     console.log(`Đã lưu`, ...data)
-                    setLib([...lib, ...data])
+                    setLib(lib.concat(data))
                 })
                 .catch(err => console.log(err))
         }

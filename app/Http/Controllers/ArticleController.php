@@ -30,19 +30,7 @@ class ArticleController extends Controller
      */
     public function create()
     {
-        $user = Auth::user();
-
-        $images = [];
-
-        if ($user->get_article_images) {
-            foreach($user->get_article_images as $image) {
-                array_push($images, asset('images/'.$image->name));
-            }
-        }
-
-        return Inertia::render('Article/Pages/Add', [
-            'imagesLib' => $images
-        ]);
+        return Inertia::render('Article/Pages/Add');
     }
 
     /**

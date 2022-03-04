@@ -68,7 +68,6 @@ function Add(props) {
                             value={data.content}
                             height={520}
                             authorId={props.auth.user.id}
-                            imagesLib={props.imagesLib}
                         />
                     </EditorProvider>
                 </div>
