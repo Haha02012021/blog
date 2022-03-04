@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e27b8a6962b9286f37c77cfbbbe7a99e",
+    "content-hash": "bc05b17fb81bfe506eceb338a8866ad7",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1969,16 +1969,16 @@
         },
         {
             "name": "league/flysystem-aws-s3-v3",
-            "version": "3.0.0",
+            "version": "3.0.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem-aws-s3-v3.git",
-                "reference": "f8ba6a92a5c1fdcbdd89dede009a1e6e1b93ba8c"
+                "reference": "79c63dc761b6a389a38bd409c2bf8ced73c29261"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem-aws-s3-v3/zipball/f8ba6a92a5c1fdcbdd89dede009a1e6e1b93ba8c",
-                "reference": "f8ba6a92a5c1fdcbdd89dede009a1e6e1b93ba8c",
+                "url": "https://api.github.com/repos/thephpleague/flysystem-aws-s3-v3/zipball/79c63dc761b6a389a38bd409c2bf8ced73c29261",
+                "reference": "79c63dc761b6a389a38bd409c2bf8ced73c29261",
                 "shasum": ""
             },
             "require": {
@@ -2019,9 +2019,9 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/flysystem-aws-s3-v3/issues",
-                "source": "https://github.com/thephpleague/flysystem-aws-s3-v3/tree/3.0.0"
+                "source": "https://github.com/thephpleague/flysystem-aws-s3-v3/tree/3.0.10"
             },
-            "time": "2022-01-13T21:11:49+00:00"
+            "time": "2022-02-26T10:59:05+00:00"
         },
         {
             "name": "league/glide",
