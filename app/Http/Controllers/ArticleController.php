@@ -132,8 +132,6 @@ class ArticleController extends Controller
         $article->title = $request->title;
         $article->content = $request->content;
 
-        $article->tags()->attach($request->tags);
-
         if ($request->tags) {
     
             foreach ($request->tags as $tag) {
