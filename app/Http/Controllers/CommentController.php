@@ -57,7 +57,7 @@ class CommentController extends Controller
 
         $comments->getCollection()->transform(function ($value) {
             // Your code here
-            $value->children = $value->replies()->orderBy('updated_at', 'desc')->get();
+            $value->children = $value->replies()->orderBy('updated_at')->get();
             
             return $value;
         });
@@ -124,7 +124,7 @@ class CommentController extends Controller
 
         $comments->getCollection()->transform(function ($value) {
             // Your code here
-            $value->children = $value->replies()->orderBy('updated_at', 'desc')->get();
+            $value->children = $value->replies()->orderBy('updated_at')->get();
             
             return $value;
         });

@@ -76,7 +76,10 @@ function CommentEditor({ showTitle = true, showCancel = false, className = "" })
                 })
                 .catch(err => console.log(err))
             
-            if (window.location.search.match(/\d+/g) && window.location.search.match(/\d+/g)[0] > 1) Inertia.get(comments.first_page_url + "#comment")
+            if (window.location.search.match(/\d+/g)) {
+                const currentPage = window.location.href;
+                Inertia.get(currentPage)
+            }
         }        
     }
 
