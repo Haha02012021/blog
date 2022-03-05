@@ -75,7 +75,7 @@ function CommentEditor({ showTitle = true, showCancel = false, className = "" })
                                     setCurrentPage(currentPage)
                                 }
                                 setComments(res.data)
-                                Inertia.get(currentPage + "#comment")
+                                Inertia.get(currentPage + `#${resData.replyId}`)
                             })
                             .catch(err => console.log(err))
                     } else (
@@ -262,7 +262,7 @@ function Element({ userId, comment, className = "", showRep, setShowRep }) {
 
     return (
         <div className="pb-8">
-            <div className={`bg-white sm:rounded-sm p-4 ${className}`}>
+            <div id={comment.id} className={`bg-white sm:rounded-sm p-4 ${className}`}>
                 <AuthorAvatar
                     userId={userId}
                     authorId={comment.user_id}
