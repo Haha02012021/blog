@@ -45,6 +45,7 @@ function CommentEditor({ showTitle = true, showCancel = false, className = "" })
     const [active, setActive] = useState([true, false])
     const [content, setContent] = useState("")
     const [showEmoji, setShowEmoji] = useState(false)
+    const [currentPage, setCurrentPage] = useState("")
 
     const { comments, setComments, author, authorAvatar, articleId, showRep, setShowRep } = useContext(CommentContext)
 
@@ -68,18 +69,20 @@ function CommentEditor({ showTitle = true, showCancel = false, className = "" })
                     const resData = res.data
                     if (data.parent_id != null) {
                         axios.post("/comments/reply", { comment_id: data.parent_id, reply_id: resData.replyId, article_id: articleId })
-                            .then(res => setComments(res.data))
+                            .then(res => {
+                                if (window.location.search.match(/\d+/g)) {
+                                    const currentPage = window.location.href;
+                                    setCurrentPage(currentPage + "#comment")
+                                }
+                                setComments(res.data)
+                                Inertia.get(currentPage)
+                            })
                             .catch(err => console.log(err))
                     } else (
                         setComments(resData.comments)
                     )
                 })
                 .catch(err => console.log(err))
-            
-            if (window.location.search.match(/\d+/g)) {
-                const currentPage = window.location.href;
-                Inertia.get(currentPage)
-            }
         }        
     }
 
