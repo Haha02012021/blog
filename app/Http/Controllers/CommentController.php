@@ -50,7 +50,22 @@ class CommentController extends Controller
             'parent_id' => $request->parent_id
         ]); 
 
-        return $comment->id;
+        $comments = Comment::where('article_id', $request->article_id)
+                    ->where('parent_id', null)
+                    ->orderBy('updated_at', 'desc')
+                    ->paginate(8);
+
+        $comments->getCollection()->transform(function ($value) {
+            // Your code here
+            $value->children = $value->replies()->orderBy('updated_at', 'desc')->get();
+            
+            return $value;
+        });
+
+        return [
+            'comments' => $comments, 
+            'replyId' => $comment->id
+        ];
     }
 
     /**
@@ -102,6 +117,18 @@ class CommentController extends Controller
 
         $comment->replies()->attach($request->reply_id);
 
-        return "Trả lời thành công!";
+        $comments = Comment::where('article_id', $request->article_id)
+                    ->where('parent_id', null)
+                    ->orderBy('updated_at', 'desc')
+                    ->paginate(8);
+
+        $comments->getCollection()->transform(function ($value) {
+            // Your code here
+            $value->children = $value->replies()->orderBy('updated_at', 'desc')->get();
+            
+            return $value;
+        });
+
+        return $comments;
     }
 }

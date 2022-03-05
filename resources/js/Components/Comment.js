@@ -61,25 +61,17 @@ function CommentEditor({ showTitle = true, showCancel = false, className = "" })
                 parent_id: showRep == 0 ? null : showRep
             }
 
-            if (showRep == 0) {
-                setComments({ ...comments, data: [{ id: comments.total + Math.floor(Math.random() * 100), ...data }, ...comments.data]})
-            } else {
-                const newComment = comments.data.find(comment => comment.id == data.parent_id)        
-                newComment.children = [{ id: comments.total + Math.floor(Math.random() * 100), ...data }, ...newComment.children]
-                
-                setComments({ ...comments, data: [...comments.data.filter(comment => comment.id != data.parent_id), newComment] });
-            }
-
             setShowRep(0)
 
             axios.post("/comments/store", data)
                 .then(res => {
+                    const resData = res.data
                     if (data.parent_id != null) {
-                        axios.post("/comments/reply", { comment_id: data.parent_id, reply_id: res.data })
-                            .then(res => console.log(res.data))
+                        axios.post("/comments/reply", { comment_id: data.parent_id, reply_id: resData.replyId, article_id: articleId })
+                            .then(res => setComments(res.data))
                             .catch(err => console.log(err))
                     } else (
-                        console.log("Bình luận thành công!")
+                        setComments(resData.comments)
                     )
                 })
                 .catch(err => console.log(err))

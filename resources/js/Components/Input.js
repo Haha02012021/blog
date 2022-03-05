@@ -32,6 +32,7 @@ export default function Input({
                 autoComplete={autoComplete}
                 required={required}
                 onChange={(e) => handleChange(e)}
+                onKeyPress={(e) => { e.key === 'Enter' && e.preventDefault() }}
             />
         </div>
     );

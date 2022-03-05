@@ -40,4 +40,8 @@ class Article extends Model
     public function images() {
         return $this->morphMany(Image::class, 'imageable');
     }
+
+    public function tags() {
+        return $this->belongsToMany(Tag::class, 'article_tag', 'article_id', 'tag_id')->withTimestamps();
+    }
 }

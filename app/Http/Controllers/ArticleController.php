@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Article;
 use App\Models\Comment;
+use App\Models\Tag;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -41,6 +42,7 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
+        //dd($request->tags);
         $request->validate([
             'user_id' => 'integer|required',
             'title' => 'string|required',
@@ -52,6 +54,18 @@ class ArticleController extends Controller
             'title' => $request->title,
             'content' => $request->content
         ]);
+
+        if ($request->tags) {
+            $ids = [];
+    
+            foreach ($request->tags as $tag) {
+                $newTag = Tag::firstOrCreate(['name' => $tag]);
+
+                $article->tags()->attach($newTag->id);
+            }
+            
+        }
+    
 
         return redirect()->route("articles.show", $article->id);
     }
@@ -80,6 +94,7 @@ class ArticleController extends Controller
  
         return Inertia::render('Article/Pages/Show', [
             'article' => $article,
+            'tags' => $article ? $article->tags : null,
             'comments' => $comments,
             'bookmarkedUsers' => $article ? $article->bookmarked_users : null,
             'canControl' => Gate::inspect('update', $article)->allowed(),
@@ -97,7 +112,8 @@ class ArticleController extends Controller
         $article = Article::findOrFail($id);
         Gate::authorize('update', $article);
         return Inertia::render("Article/Pages/Add", [
-            'article' => $article
+            'article' => $article,
+            'tags' => $article->tags
         ]);
     }
 
@@ -117,7 +133,17 @@ class ArticleController extends Controller
         $article->title = $request->title;
         $article->content = $request->content;
 
-        $article->update();
+        $article->tags()->attach($request->tags);
+
+        $article->save();
+
+        foreach($request->tags as $tag) {
+            if (!Tag::where('name', $tag)) {
+                Tag::create([
+                    'name' => $tag
+                ]);
+            }
+        }
 
         return redirect()->route("articles.show", $id);
     }

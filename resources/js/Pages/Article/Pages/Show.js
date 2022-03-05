@@ -10,9 +10,9 @@ import Delete from '../Components/Delete';
 import { Inertia } from "@inertiajs/inertia";
 import MDEditor from '@uiw/react-md-editor';
 
-function Show({ auth, errors, article, comments, bookmarkedUsers, canControl }) {
+function Show({ auth, errors, article, tags, comments, bookmarkedUsers, canControl }) {
 
-    console.log(comments);
+    console.log(tags);
 
     const [time, setTime] = useState({})
     const [deleteSelect, setDeleteSelect] = useState(false)
@@ -98,6 +98,18 @@ function Show({ auth, errors, article, comments, bookmarkedUsers, canControl }) 
                                                         time={`Cập nhật lần cuối: ${time.updated}`}
                                                     />
                                                 </div>
+                                            </div>
+                                            <div className="flex pt-2">
+                                                {tags.map(tag => {
+                                                    return (
+                                                        <div
+                                                            key={tag.name}
+                                                            className="bg-white h-8 px-2 flex items-center justify-center rounded-md mr-2 shadow-inner border-gray-200 shadow-sm border-solid text-gray-600/50 hover:bg-gray-200/50 cursor-pointer"
+                                                        >
+                                                            {tag.name}
+                                                        </div>
+                                                    )
+                                                })}
                                             </div>
                                         </div>
                                     </div>
