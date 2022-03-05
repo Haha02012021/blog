@@ -56,7 +56,6 @@ class ArticleController extends Controller
         ]);
 
         if ($request->tags) {
-            $ids = [];
     
             foreach ($request->tags as $tag) {
                 $newTag = Tag::firstOrCreate(['name' => $tag]);
@@ -135,15 +134,17 @@ class ArticleController extends Controller
 
         $article->tags()->attach($request->tags);
 
-        $article->save();
+        if ($request->tags) {
+    
+            foreach ($request->tags as $tag) {
+                $newTag = Tag::firstOrCreate(['name' => $tag]);
 
-        foreach($request->tags as $tag) {
-            if (!Tag::where('name', $tag)) {
-                Tag::create([
-                    'name' => $tag
-                ]);
+                $article->tags()->attach($newTag->id);
             }
+            
         }
+
+        $article->save();
 
         return redirect()->route("articles.show", $id);
     }
