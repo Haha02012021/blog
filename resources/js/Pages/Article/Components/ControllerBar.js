@@ -3,11 +3,11 @@ import { Inertia } from "@inertiajs/inertia";
 import { FaPenSquare, FaTrashAlt } from "react-icons/fa";
 import { GoKebabHorizontal } from "react-icons/go";
 
-export default function ControllerBar({ articleId, onClick }) {
+export default function ControllerBar({ type, articleId, onClick, classNameTrigger = "" }) {
     return (
         <Dropdown>
             <Dropdown.Trigger>
-                <div className="text-2xl">
+                <div className={`text-2xl ${classNameTrigger}`}>
                     <GoKebabHorizontal
                         color="transparent"
                         stroke="gray"
@@ -17,7 +17,7 @@ export default function ControllerBar({ articleId, onClick }) {
             </Dropdown.Trigger>
 
             <Dropdown.Content width="w-40" className=" z-1">
-                <Dropdown.Link href={route("articles.edit", articleId)} method="get" as="button">
+                <Dropdown.Link href={route(`${type}.edit`, articleId)} method="get" as="button">
                     <FaPenSquare />
                     <div className="ml-2">
                         Sửa bài viết

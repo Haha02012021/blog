@@ -23,6 +23,10 @@ return new class extends Migration
             $table->foreign('article_id')
                 ->references('id')->on('articles')
                 ->onDelete('cascade');
+            $table->bigInteger('parent_id')->unsigned()->nullable();
+            $table->foreign('parent_id')
+                ->references('id')->on('comments')
+                ->onDelete('cascade');
             $table->string('content');
             $table->timestamps();
         });

@@ -12,6 +12,8 @@ import MDEditor from '@uiw/react-md-editor';
 
 function Show({ auth, errors, article, comments, bookmarkedUsers, canControl }) {
 
+    console.log(comments);
+
     const [time, setTime] = useState({})
     const [deleteSelect, setDeleteSelect] = useState(false)
 
@@ -49,7 +51,12 @@ function Show({ auth, errors, article, comments, bookmarkedUsers, canControl }) 
             >
                 {article ? (
                     <>
-                        <Comment commentsData={comments}>
+                        <Comment
+                            commentsData={comments}
+                            author={auth.user ? auth.user : null}
+                            authorAvatar={auth.avatar ? auth.avatar : null}
+                            articleId={article.id} 
+                        >
 
                             <div className="py-16 flex justify-center">
                                 <Bookmark articleId={article.id}>
@@ -83,7 +90,7 @@ function Show({ auth, errors, article, comments, bookmarkedUsers, canControl }) 
                                                 <div className="p-6 bg-white border-b border-gray-200">
                                                     <div className="flex items-end justify-between">
                                                         <h2 className="text-4xl font-extrabold mb-12">{article.title}</h2>
-                                                        {canControl && <ControllerBar articleId={article.id} onClick={() => setDeleteSelect(true)} />}
+                                                        {canControl && <ControllerBar type="articles" articleId={article.id} onClick={() => setDeleteSelect(true)} />}
                                                     </div>
                                                     <MDEditor.Markdown source={article.content}/>
                                                     <Time
@@ -97,7 +104,7 @@ function Show({ auth, errors, article, comments, bookmarkedUsers, canControl }) 
                                 </Bookmark>
                             </div>
 
-                            <Comment.Editor author={auth.user ? auth.user : null} authorAvatar={auth.avatar ? auth.avatar : null} articleId={article.id} />
+                            <Comment.Editor />
                             <Comment.Thread userId={auth.user ? auth.user.id : null} />
                         </Comment>
                     </>

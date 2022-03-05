@@ -65,10 +65,22 @@ class ArticleController extends Controller
     public function show($id)
     {
         $article = Article::find($id);
+
+        $comments = Comment::where('article_id', $id)
+                    ->where('parent_id', null)
+                    ->orderBy('updated_at', 'desc')
+                    ->paginate(8);
+
+        $comments->getCollection()->transform(function ($value) {
+            // Your code here
+            $value->children = $value->replies()->orderBy('updated_at', 'desc')->get();
+            
+            return $value;
+        });
  
         return Inertia::render('Article/Pages/Show', [
             'article' => $article,
-            'comments' => Comment::where('article_id', $id)->orderBy('updated_at', 'desc')->paginate(8),
+            'comments' => $comments,
             'bookmarkedUsers' => $article ? $article->bookmarked_users : null,
             'canControl' => Gate::inspect('update', $article)->allowed(),
         ]);

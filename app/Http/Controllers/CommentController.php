@@ -43,13 +43,14 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
-        Comment::create([
+        $comment = Comment::create([
             'user_id' => $request->user_id,
             'article_id' => $request->article_id,
-            'content' => $request->content
+            'content' => $request->content,
+            'parent_id' => $request->parent_id
         ]); 
 
-        return redirect('/articles/show/'.$request->article_id);
+        return $comment->id;
     }
 
     /**
@@ -94,5 +95,13 @@ class CommentController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function reply(Request $request) {
+        $comment = Comment::findOrFail($request->comment_id);
+
+        $comment->replies()->attach($request->reply_id);
+
+        return "Trả lời thành công!";
     }
 }

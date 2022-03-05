@@ -3,7 +3,7 @@ import { FaSortDown, FaSortUp } from "react-icons/fa";
 import axios from "axios";
 import { Inertia } from "@inertiajs/inertia";
 
-export default function Vote({ article, userId }) {
+export default function Vote({ article, userId, classNameVote = "", classNameVoteButton = "" }) {
     const [numberOfVotes, setNumberOfVotes] = useState({default: 0, current: 0})
     const [iconColor, setIconColor] = useState(["gray", "gray"])
 
@@ -90,14 +90,14 @@ export default function Vote({ article, userId }) {
 
     return (
         <div>
-            <div className="text-3xl text-center">
-                <div className="text-4xl cursor-pointer" onClick={handleUpVote}>
+            <div className={`text-3xl text-center ${classNameVote}`}>
+                <div className={`text-4xl cursor-pointer ${classNameVoteButton}`} onClick={handleUpVote}>
                     <FaSortUp color={iconColor[0]}/> 
                 </div>
                 <div style={{color: iconColor.includes("black") ? "black" : "gray"}}>
                 { numberOfVotes.current > 0 ? "+" + numberOfVotes.current : numberOfVotes.current } 
                 </div>
-                <div className="text-4xl cursor-pointer" onClick={handleDownVote}>
+                <div className={`text-4xl cursor-pointer ${classNameVoteButton}`} onClick={handleDownVote}>
                     <FaSortDown color={iconColor[1]} className="hover:text-black"/>
                 </div>
             </div>

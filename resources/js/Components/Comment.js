@@ -1,4 +1,5 @@
 import AuthorAvatar from "@/Pages/Article/Components/AuthorAvatar";
+import ControllerBar from "@/Pages/Article/Components/ControllerBar";
 import { Inertia } from "@inertiajs/inertia";
 import { Link } from "@inertiajs/inertia-react";
 import MDEditor, { link } from "@uiw/react-md-editor";
@@ -9,30 +10,43 @@ import { HiOutlineChatAlt2, HiOutlineEmojiHappy } from "react-icons/hi";
 import Button from "./Button";
 import EditorProvider from "./Editor";
 import CustomPagination from "./Pagination";
+import { FaAngleUp, FaAngleDown } from "react-icons/fa";
+import axios from "axios";
 
 const CommentContext = createContext()
 
-function Comment({ commentsData, children }) {
+function Comment({ commentsData, author, authorAvatar, articleId, children }) {
     const [comments, setComments] = useState({
         ...commentsData,
         links: commentsData.links.map(link => {
             return { ...link, url: link.url + "#comment" }
         })
     })
+    const [showRep, setShowRep] = useState(0)
 
     return (
-        <CommentContext.Provider value={{ comments, setComments }}>
+        <CommentContext.Provider
+            value={{
+                comments,
+                setComments,
+                author,
+                authorAvatar,
+                articleId,
+                showRep,
+                setShowRep,
+            }}
+        >
             { children }
         </CommentContext.Provider>
     )    
 }
 
-function CommentEditor({ author, authorAvatar, articleId }) {
+function CommentEditor({ showTitle = true, showCancel = false, className = "" }) {
     const [active, setActive] = useState([true, false])
     const [content, setContent] = useState("")
     const [showEmoji, setShowEmoji] = useState(false)
 
-    const { comments, setComments } = useContext(CommentContext)
+    const { comments, setComments, author, authorAvatar, articleId, showRep, setShowRep } = useContext(CommentContext)
 
     const handleSubmitComment = (event) => {
         event.preventDefault()
@@ -43,18 +57,35 @@ function CommentEditor({ author, authorAvatar, articleId }) {
             const data = {
                 user_id: author.id,
                 article_id: articleId,
-                content
+                content,
+                parent_id: showRep == 0 ? null : showRep
             }
 
-            setComments({ ...comments, data: [{ id: comments.total + 1, ...data }, ...comments.data]})
-            
+            if (showRep == 0) {
+                setComments({ ...comments, data: [{ id: comments.total + Math.floor(Math.random() * 100), ...data }, ...comments.data]})
+            } else {
+                const newComment = comments.data.find(comment => comment.id == data.parent_id)        
+                newComment.children = [{ id: comments.total + Math.floor(Math.random() * 100), ...data }, ...newComment.children]
+                
+                setComments({ ...comments, data: [...comments.data.filter(comment => comment.id != data.parent_id), newComment] });
+            }
+
+            setShowRep(0)
+
             axios.post("/comments/store", data)
-                .then(res => console.log("Comment thành công"))
+                .then(res => {
+                    if (data.parent_id != null) {
+                        axios.post("/comments/reply", { comment_id: data.parent_id, reply_id: res.data })
+                            .then(res => console.log(res.data))
+                            .catch(err => console.log(err))
+                    } else (
+                        console.log("Bình luận thành công!")
+                    )
+                })
                 .catch(err => console.log(err))
             
-            if (window.location.search.match(/\d+/g)[0] > 1) Inertia.get(comments.first_page_url + "#comment")
-        }
-        
+            if (window.location.search.match(/\d+/g) && window.location.search.match(/\d+/g)[0] > 1) Inertia.get(comments.first_page_url + "#comment")
+        }        
     }
 
     const handleChangeComment = (newValue) => {
@@ -79,11 +110,13 @@ function CommentEditor({ author, authorAvatar, articleId }) {
 
     return (
         <div id="comment" className="pb-8">
-            <div className="text-2xl font-bold w-4/5 mx-auto">
-                Bình luận
-            </div>
+            {showTitle && (
+                <div className={`text-2xl font-bold w-4/5 mx-auto`}>
+                    Bình luận
+                </div>
+            )}
             <div>
-                <div className="bg-white rounded-sm p-6 w-4/5 mx-auto">
+                <div className={`bg-white rounded-sm p-6 w-4/5 mx-auto  ${className}`}>
                     {author ? (
                         <>
                             <div className="w-full border-b-1 border-b-2 border-gray-200 mb-2">
@@ -156,7 +189,17 @@ function CommentEditor({ author, authorAvatar, articleId }) {
                                             </div>
                                     )}
                                     <div className="relative p-6">
-                                        <Button className={` absolute right-0 ${content ? "" : "opacity-50"}`}>Bình luận</Button> 
+                                        {showCancel && (
+                                            <button
+                                                className="bg-transparent text-gray-600 hover:text-gray-900 transition ease-in-out duration-150 uppercase font-semibold text-xs cursor-pointer"
+                                                onClick={() => setShowRep(0)}
+                                                formMethod="head"
+                                            >
+                                                Hủy
+                                            </button>
+                                        )}
+                                        <Button
+                                            className={` absolute right-0 ${content ? "" : "opacity-50"}`}>{showCancel ? "Trả lời" : "Bình luận"}</Button> 
                                     </div>
                                 </form>
                             </div>
@@ -173,7 +216,7 @@ function CommentEditor({ author, authorAvatar, articleId }) {
 }
 
 function Thread({ userId }) {
-    const { comments } = useContext(CommentContext)
+    const { comments, author, authorAvatar, articleId, showRep, setShowRep } = useContext(CommentContext)
     return (
         <>
             {comments.data.map(comment => {
@@ -181,9 +224,14 @@ function Thread({ userId }) {
                     <Element
                         key={comment.id}
                         userId={userId}
-                        authorId={comment.user_id}
-                        contentComment={comment.content}
+                        comment={comment}
                         className="w-4/5 mx-auto"
+                        comments={comments}
+                        author={author}
+                        authorAvatar={authorAvatar}
+                        articleId={articleId}
+                        showRep={showRep}
+                        setShowRep={setShowRep}
                     />
                 )
             })}
@@ -207,18 +255,62 @@ function Display() {
     )
 }
 
-function Element({ userId, authorId, contentComment, className = "" }) {
+function Element({ userId, comment, className = "", showRep, setShowRep }) {
+
+    const handleReply = () => {
+        if (comment.parent_id == null) setShowRep(comment.id)
+        else setShowRep(comment.parent_id)
+    }
+
     return (
         <div className="pb-8">
             <div className={`bg-white sm:rounded-sm p-4 ${className}`}>
                 <AuthorAvatar
                     userId={userId}
-                    authorId={authorId}
+                    authorId={comment.user_id}
                     showUserInfoTable={false}
                     className=" ml-0"
                     classNameAvatar="w-[20px] h-[20px] text-[10px] mr-2"
                 />
-                <MDEditor.Markdown source={contentComment} />
+                <MDEditor.Markdown source={comment.content} />
+                <div className="flex">
+                    {/*<VoteComment />*/}
+                    <div
+                        className="text-gray-600 hover:text-gray-900 hover:underline cursor-pointer"
+                        onClick={handleReply}
+                    >
+                        Trả lời
+                    </div>
+                </div>
+                {comment.children && comment.children.map((chid => {
+                    return (
+                        <Element
+                            userId={userId}
+                            comment={chid}
+                            showRep={showRep}
+                            setShowRep={setShowRep}
+                        />
+                    )
+                }))}
+                {showRep == comment.id && (
+                    <CommentEditor showCancel={true} showTitle={false} className="w-[100%]"/>
+                )}
+            </div>
+        </div>
+    )
+}
+
+function VoteComment() {
+    return (
+        <div className="flex items-center">
+            <div>
+                <FaAngleUp />
+            </div>
+            <div>
+
+            </div>
+            <div>
+                <FaAngleDown />
             </div>
         </div>
     )
