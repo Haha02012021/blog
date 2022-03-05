@@ -72,10 +72,10 @@ function CommentEditor({ showTitle = true, showCancel = false, className = "" })
                             .then(res => {
                                 if (window.location.search.match(/\d+/g)) {
                                     const currentPage = window.location.href;
-                                    setCurrentPage(currentPage + "#comment")
+                                    setCurrentPage(currentPage)
                                 }
                                 setComments(res.data)
-                                Inertia.get(currentPage)
+                                Inertia.get(currentPage + "#comment")
                             })
                             .catch(err => console.log(err))
                     } else (
