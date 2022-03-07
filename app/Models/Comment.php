@@ -27,6 +27,20 @@ class Comment extends Model
     }
 
     public function replies() {
-        return $this->belongsToMany(Comment::class, 'comment_reply', 'comment_id', 'reply_id');
+        return $this->belongsToMany(Comment::class, 'comment_reply', 'comment_id', 'reply_id')->withTimestamps();
+    }
+
+    public function show_replies() {
+        $replies = $this->replies;
+        if (empty($replies))
+            return $replies;
+
+        foreach ($replies as $reply)
+        {
+            //$reply->load('replies');
+            $replies = $replies->merge($reply->show_replies());
+        }
+
+        return $replies;
     }
 }

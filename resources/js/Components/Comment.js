@@ -4,7 +4,7 @@ import { Inertia } from "@inertiajs/inertia";
 import { Link } from "@inertiajs/inertia-react";
 import MDEditor, { link } from "@uiw/react-md-editor";
 import EmojiPicker from "emoji-picker-react";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { BsChat } from "react-icons/bs";
 import { HiOutlineChatAlt2, HiOutlineEmojiHappy } from "react-icons/hi";
 import Button from "./Button";
@@ -25,19 +25,21 @@ function Comment({ commentsData, author, authorAvatar, articleId, children }) {
     const [showRep, setShowRep] = useState(0)
 
     return (
-        <CommentContext.Provider
-            value={{
-                comments,
-                setComments,
-                author,
-                authorAvatar,
-                articleId,
-                showRep,
-                setShowRep,
-            }}
-        >
-            { children }
-        </CommentContext.Provider>
+        <>
+            <CommentContext.Provider
+                value={{
+                    comments,
+                    setComments,
+                    author,
+                    authorAvatar,
+                    articleId,
+                    showRep,
+                    setShowRep,
+                }}
+            >
+                { children }
+            </CommentContext.Provider>
+        </>
     )    
 }
 
@@ -75,7 +77,7 @@ function CommentEditor({ showTitle = true, showCancel = false, className = "" })
                                     setCurrentPage(currentPage)
                                 }
                                 setComments(res.data)
-                                Inertia.get(currentPage + `#${resData.replyId}`)
+                                Inertia.get(currentPage + `#comment-${resData.replyId}`)
                             })
                             .catch(err => console.log(err))
                     } else (
@@ -217,7 +219,7 @@ function Thread({ userId }) {
     const { comments, author, authorAvatar, articleId, showRep, setShowRep } = useContext(CommentContext)
     return (
         <>
-            {comments.data.map(comment => {
+            {comments.data && comments.data.map(comment => {
                 return (
                     <Element
                         key={comment.id}
@@ -256,13 +258,12 @@ function Display() {
 function Element({ userId, comment, className = "", showRep, setShowRep }) {
 
     const handleReply = () => {
-        if (comment.parent_id == null) setShowRep(comment.id)
-        else setShowRep(comment.parent_id)
+        setShowRep(comment.id)
     }
 
     return (
         <div className="pb-8">
-            <div id={comment.id} className={`bg-white sm:rounded-sm p-4 ${className}`}>
+            <div id={"#comment-" + comment.id} className={`bg-white sm:rounded-sm p-4 ${className}`}>
                 <AuthorAvatar
                     userId={userId}
                     authorId={comment.user_id}
@@ -279,6 +280,11 @@ function Element({ userId, comment, className = "", showRep, setShowRep }) {
                     >
                         Trả lời
                     </div>
+                    {userId == comment.user_id && (
+                        <Link method="delete" href={route("comments.destroy", comment.id)} className="ml-2">
+                            Xóa
+                        </Link>
+                    )}
                 </div>
                 {comment.children && comment.children.map((chid => {
                     return (

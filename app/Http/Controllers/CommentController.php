@@ -74,10 +74,25 @@ class CommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Article $article)
-    {
-    }
+    public function show($article_id)
+    {   
+        $comments = Comment::where('article_id', $article_id)
+                    ->where('parent_id', null)
+                    ->orderBy('updated_at', 'desc')
+                    ->with('replies')
+                    ->paginate(8);
 
+        $comments->getCollection()->transform(function ($value) {
+            // Your code here
+            $value->children = $value->show_replies($value);
+            $value->number_children = count($value->children);
+            
+            return $value;
+        });
+
+        return $comments;
+    }
+    
     /**
      * Show the form for editing the specified resource.
      *
@@ -109,7 +124,11 @@ class CommentController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $comment = Comment::find($id);
+
+        $comment->delete();
+
+        return redirect()->back();
     }
 
     public function reply(Request $request) {
