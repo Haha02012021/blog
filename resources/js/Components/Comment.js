@@ -76,12 +76,22 @@ function CommentEditor({ showTitle = true, showCancel = false, className = "" })
                                     const currentPage = window.location.href;
                                     setCurrentPage(currentPage)
                                 }
-                                setComments(res.data)
+                                setComments({
+                                    ...res.data,
+                                    links: res.data.links.map(link => {
+                                        return { ...link, url: link.url + "#comment" }
+                                    })
+                                })
                                 Inertia.get(currentPage + `#comment-${resData.replyId}`)
                             })
                             .catch(err => console.log(err))
                     } else (
-                        setComments(resData.comments)
+                        setComments({
+                            ...resData.comments,
+                            links: resData.comments.links.map(link => {
+                                return { ...link, url: link.url + "#comment" }
+                            })
+                        })
                     )
                 })
                 .catch(err => console.log(err))
@@ -216,7 +226,7 @@ function CommentEditor({ showTitle = true, showCancel = false, className = "" })
 }
 
 function Thread({ userId }) {
-    const { comments, author, authorAvatar, articleId, showRep, setShowRep } = useContext(CommentContext)
+    const { comments, setComments, author, authorAvatar, articleId, showRep, setShowRep } = useContext(CommentContext)
     return (
         <>
             {comments.data && comments.data.map(comment => {
@@ -226,12 +236,6 @@ function Thread({ userId }) {
                         userId={userId}
                         comment={comment}
                         className="w-4/5 mx-auto"
-                        comments={comments}
-                        author={author}
-                        authorAvatar={authorAvatar}
-                        articleId={articleId}
-                        showRep={showRep}
-                        setShowRep={setShowRep}
                     />
                 )
             })}
@@ -255,10 +259,28 @@ function Display() {
     )
 }
 
-function Element({ userId, comment, className = "", showRep, setShowRep }) {
+function Element({ userId, comment, className = "" }) {
+
+    const { comments, setComments, showRep, setShowRep } = useContext(CommentContext)
 
     const handleReply = () => {
+        console.log("cmts", comments)
         setShowRep(comment.id)
+    }
+
+    const handleDelete = () => {
+        console.log("comments", comments);
+        
+        axios.delete(`/comments/destroy/${comment.id}`, { comment })
+            .then(res => {
+                setComments({
+                    ...res.data,
+                    links: res.data.links.map(link => {
+                        return { ...link, url: link.url + "#comment" }
+                    })
+                });
+            })
+            .catch(err => console.log(err))
     }
 
     return (
@@ -281,9 +303,9 @@ function Element({ userId, comment, className = "", showRep, setShowRep }) {
                         Trả lời
                     </div>
                     {userId == comment.user_id && (
-                        <Link method="delete" href={route("comments.destroy", comment.id)} className="ml-2">
+                        <div onClick={handleDelete} className="text-gray-600 hover:text-gray-900 hover:underline ml-2 cursor-pointer">
                             Xóa
-                        </Link>
+                        </div>
                     )}
                 </div>
                 {comment.children && comment.children.map((chid => {

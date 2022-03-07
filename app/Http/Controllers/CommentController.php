@@ -122,13 +122,27 @@ class CommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Comment $comment)
     {
-        $comment = Comment::find($id);
+        $comment = Comment::find($comment->id);
 
         $comment->delete();
 
-        return redirect()->back();
+        $comments = Comment::where('article_id', $comment->article_id)
+                    ->where('parent_id', null)
+                    ->orderBy('updated_at', 'desc')
+                    ->with('replies')
+                    ->paginate(8);
+
+        $comments->getCollection()->transform(function ($value) {
+            // Your code here
+            $value->children = $value->show_replies($value);
+            $value->number_children = count($value->children);
+            
+            return $value;
+        });
+
+        return $comments;
     }
 
     public function reply(Request $request) {
