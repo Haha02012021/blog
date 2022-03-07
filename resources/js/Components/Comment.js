@@ -49,7 +49,7 @@ function CommentEditor({ showTitle = true, showCancel = false, className = "" })
     const [showEmoji, setShowEmoji] = useState(false)
     const [currentPage, setCurrentPage] = useState("")
 
-    const { comments, setComments, author, authorAvatar, articleId, showRep, setShowRep } = useContext(CommentContext)
+    const { setComments, author, authorAvatar, articleId, showRep, setShowRep } = useContext(CommentContext)
 
     const handleSubmitComment = (event) => {
         event.preventDefault()
@@ -263,7 +263,7 @@ function Element({ userId, comment, className = "", showRep, setShowRep }) {
 
     return (
         <div className="pb-8">
-            <div id={"#comment-" + comment.id} className={`bg-white sm:rounded-sm p-4 ${className}`}>
+            <div id={"comment-" + comment.id} className={`bg-white sm:rounded-sm p-4 ${className}`}>
                 <AuthorAvatar
                     userId={userId}
                     authorId={comment.user_id}
