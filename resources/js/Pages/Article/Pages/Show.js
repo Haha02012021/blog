@@ -10,7 +10,7 @@ import Delete from '../Components/Delete';
 import { Inertia } from "@inertiajs/inertia";
 import MDEditor from '@uiw/react-md-editor';
 
-function Show({ auth, errors, article, tags, comments, bookmarkedUsers, canControl }) {
+function Show({ auth, errors, article, comments, tags, bookmarkedUsers, canControl }) {
 
     console.log(tags);
 
