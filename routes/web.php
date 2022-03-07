@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\ImageController;
-use App\Http\Controllers\TestController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -28,9 +27,5 @@ Route::get('/welcome', function () {
 Route::post('/image/upload', [ImageController::class, 'upload'])->name('image.upload');
 
 Route::get('/image/{type}/load', [ImageController::class, 'loadMany'])->name('image.load-many');
-
-Route::get('/test', [TestController::class, 'get'])->name('tests.get');
-
-Route::post('/test', [TestController::class, 'post'])->name('tests.post');
 
 require __DIR__.'/auth.php';
