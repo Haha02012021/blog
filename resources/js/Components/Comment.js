@@ -23,6 +23,7 @@ function Comment({ commentsData, author, authorAvatar, articleId, children }) {
         })
     })
     const [showRep, setShowRep] = useState(0)
+    const [showEdit, setShowEdit] = useState(false)
 
     return (
         <>
@@ -35,6 +36,8 @@ function Comment({ commentsData, author, authorAvatar, articleId, children }) {
                     articleId,
                     showRep,
                     setShowRep,
+                    showEdit,
+                    setShowEdit
                 }}
             >
                 { children }
@@ -261,11 +264,15 @@ function Display() {
 
 function Element({ userId, comment, className = "" }) {
 
-    const { comments, setComments, showRep, setShowRep } = useContext(CommentContext)
+    const { comments, setComments, showRep, setShowRep, showEdit, setShowEdit } = useContext(CommentContext)
 
     const handleReply = () => {
         console.log("cmts", comments)
         setShowRep(comment.id)
+    }
+
+    const handleEdit = () => {
+        setShowEdit(true)
     }
 
     const handleDelete = () => {
@@ -286,28 +293,29 @@ function Element({ userId, comment, className = "" }) {
     return (
         <div className="pb-8">
             <div id={"comment-" + comment.id} className={`bg-white sm:rounded-sm p-4 ${className}`}>
-                <AuthorAvatar
-                    userId={userId}
-                    authorId={comment.user_id}
-                    showUserInfoTable={false}
-                    className=" ml-0"
-                    classNameAvatar="w-[20px] h-[20px] text-[10px] mr-2"
-                />
-                <MDEditor.Markdown source={comment.content} />
-                <div className="flex">
-                    {/*<VoteComment />*/}
-                    <div
-                        className="text-gray-600 hover:text-gray-900 hover:underline cursor-pointer"
-                        onClick={handleReply}
-                    >
-                        Trả lời
-                    </div>
-                    {userId == comment.user_id && (
-                        <div onClick={handleDelete} className="text-gray-600 hover:text-gray-900 hover:underline ml-2 cursor-pointer">
-                            Xóa
-                        </div>
-                    )}
+            <AuthorAvatar
+                userId={userId}
+                authorId={comment.user_id}
+                showUserInfoTable={false}
+                className=" ml-0"
+                classNameAvatar="w-[20px] h-[20px] text-[10px] mr-2"
+            />
+            <MDEditor.Markdown source={comment.content} />
+            <div className="flex">
+                {/*<VoteComment />*/}
+                <div
+                    className="text-gray-600 hover:text-gray-900 hover:underline cursor-pointer"
+                    onClick={handleReply}
+                >
+                    Trả lời
                 </div>
+                {userId == comment.user_id && (
+                    <>
+                        <ControllerBar onClickEdit={handleEdit} onClick={handleDelete} type={"comments"} />
+                    </>
+                    
+                )}
+            </div>
                 {comment.children && comment.children.map((chid => {
                     return (
                         <Element

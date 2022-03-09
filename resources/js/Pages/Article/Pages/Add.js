@@ -8,6 +8,8 @@ import EditorProvider from "@/Components/Editor";
 import { FaTimes } from "react-icons/fa";
 
 function Add(props) {
+    console.log(props);
+
     const { data, setData, post, processing, errors, reset } = useForm({
         user_id: props.auth.user.id,
         title: props.article ? props.article.title : "",
@@ -25,7 +27,7 @@ function Add(props) {
         if (event.key === "Enter" && event.target.value.match(/\w+/g)) {
             if (data.tags.length < 5) {
                 const newTag = event.target.value.replace("/\s+/g", "")
-                if (!data.tags.includes(newTag)) setData('tags', data.tags.concat([newTag]))
+                if (!data.tags.includes(newTag)) setData('tags', [...data.tags, newTag])
             }
             inputTagRef.current.value = ""
         }
@@ -37,7 +39,7 @@ function Add(props) {
     }
 
     const handleEraseTag = (index) => {
-        delete data.tags[index]
+        data.tags.splice(index, 1)
         setData("tags", data.tags)
     }
 
@@ -60,8 +62,7 @@ function Add(props) {
             errors={props.errors}
         >
             <Head title="Bài viết mới" />
-            <form
-                onSubmit={handleSubmit}
+            <div
                 className="mx-24 h-fit pt-4"
             >
                 <div className="pt-4">
@@ -121,11 +122,11 @@ function Add(props) {
                 </div>
 
                 <div className="pt-4 pb-16">
-                    <Button className="right-24 absolute" processing={processing}>
+                    <Button className="right-24 absolute" processing={processing} onClick={handleSubmit}>
                         {props.article ? "Lưu bài" : "Đăng bài"}
                     </Button>
                 </div>
-            </form>
+            </div>
         </Authenticated>
     )
 

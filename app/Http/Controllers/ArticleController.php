@@ -92,11 +92,13 @@ class ArticleController extends Controller
             
             return $value;
         });
+
+        //dd($article->tags->map->only('name'));
  
         return Inertia::render('Article/Pages/Show', [
             'article' => $article,
             'comments' => $comments,
-            'tags' => $article ? $article->tags : null,
+            'tags' => $article ? $article->tags->map->only('name') : null,
             'bookmarkedUsers' => $article ? $article->bookmarked_users : null,
             'canControl' => Gate::inspect('update', $article)->allowed(),
         ]);
@@ -114,7 +116,7 @@ class ArticleController extends Controller
         Gate::authorize('update', $article);
         return Inertia::render("Article/Pages/Add", [
             'article' => $article,
-            'tags' => $article->tags
+            'tags' => $article->tags->pluck('name')->toArray()
         ]);
     }
 

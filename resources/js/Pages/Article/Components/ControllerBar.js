@@ -3,7 +3,7 @@ import { Inertia } from "@inertiajs/inertia";
 import { FaPenSquare, FaTrashAlt } from "react-icons/fa";
 import { GoKebabHorizontal } from "react-icons/go";
 
-export default function ControllerBar({ type, articleId, onClick, classNameTrigger = "" }) {
+export default function ControllerBar({ type, articleId, onClick, onClickEdit = null, classNameTrigger = "" }) {
     return (
         <Dropdown>
             <Dropdown.Trigger>
@@ -17,16 +17,16 @@ export default function ControllerBar({ type, articleId, onClick, classNameTrigg
             </Dropdown.Trigger>
 
             <Dropdown.Content width="w-40" className=" z-1">
-                <Dropdown.Link href={route(`${type}.edit`, articleId)} method="get" as="button">
+                <Dropdown.Link onClick={onClickEdit} href={!onClickEdit ? route(`${type}.edit`, articleId) : null} method="get" as="button">
                     <FaPenSquare />
                     <div className="ml-2">
-                        Sửa bài viết
+                        Sửa
                     </div>
                 </Dropdown.Link>
                 <Dropdown.Link onClick={onClick} as="button" method="head">
                     <FaTrashAlt />
                     <div className="ml-2">
-                        Xóa bài viết
+                        Xóa
                     </div>
                 </Dropdown.Link>
             </Dropdown.Content>
