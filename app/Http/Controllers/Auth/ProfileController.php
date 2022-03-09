@@ -29,6 +29,6 @@ class ProfileController extends Controller
 
         $user->update();
 
-        return 'ok';
+        return redirect()->back();
     }
 }

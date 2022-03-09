@@ -49,6 +49,8 @@ function Add(props) {
             } else {
                 post(route("articles.store"))
             }
+        } else {
+            alert("Bạn cần có ít nhất 1 tag!")
         }
     }
 
