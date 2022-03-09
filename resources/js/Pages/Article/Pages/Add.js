@@ -43,11 +43,12 @@ function Add(props) {
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        
-        if (props.article) {
-            post(route("articles.update", props.article.id))
-        } else {
-            post(route("articles.store"))
+        if (data.tags.length > 0) {
+            if (props.article) {
+                post(route("articles.update", props.article.id))
+            } else {
+                post(route("articles.store"))
+            }
         }
     }
 
