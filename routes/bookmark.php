@@ -10,4 +10,4 @@ Route::post("/destroy/{article}", [BookmarkController::class, 'destroy'])->name(
 
 Route::get("/show/{article}", [BookmarkController::class, 'show'])->name('show');
 
-Route::get("/index", [BookmarkController::class, 'index'])->name('index');
+Route::middleware('auth')->get("/index", [BookmarkController::class, 'index'])->name('index');
