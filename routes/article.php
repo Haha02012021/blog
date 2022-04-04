@@ -1,8 +1,8 @@
 <?php
 
+use App\Http\Controllers\Article\ArticleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ArticleController;
 
 Route::get('/index', [ArticleController::class, 'index'])->name('index');
 

@@ -12,6 +12,7 @@ import EditorProvider from "./Editor";
 import CustomPagination from "./Pagination";
 import { FaAngleUp, FaAngleDown } from "react-icons/fa";
 import axios from "axios";
+import Vote from "./Vote";
 
 const CommentContext = createContext()
 
@@ -302,7 +303,14 @@ function Element({ userId, comment, className = "" }) {
             />
             <MDEditor.Markdown source={comment.content} />
             <div className="flex">
-                {/*<VoteComment />*/}
+                    {/*<VoteComment />*/}
+                <Vote
+                    typePost="comments"
+                    post={comment}
+                    userId={userId}
+                    classNameVote=" flex text-normal items-center"
+                    classNameVoteButton="text-normal"
+                />
                 <div
                     className="text-gray-600 hover:text-gray-900 hover:underline cursor-pointer"
                     onClick={handleReply}
@@ -329,22 +337,6 @@ function Element({ userId, comment, className = "" }) {
                 {showRep == comment.id && (
                     <CommentEditor showCancel={true} showTitle={false} className="w-[100%]"/>
                 )}
-            </div>
-        </div>
-    )
-}
-
-function VoteComment() {
-    return (
-        <div className="flex items-center">
-            <div>
-                <FaAngleUp />
-            </div>
-            <div>
-
-            </div>
-            <div>
-                <FaAngleDown />
             </div>
         </div>
     )

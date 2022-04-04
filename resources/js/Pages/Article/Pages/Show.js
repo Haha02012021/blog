@@ -62,7 +62,7 @@ function Show({ auth, errors, article, comments, tags, bookmarkedUsers, canContr
                                 <Bookmark articleId={article.id}>
                                     <div>
                                         <div className={"w-fit pt-20 sticky top-0"}>
-                                            <Vote article={article} userId={auth.user ? auth.user.id : '0'} />
+                                            <Vote typePost="articles" post={article} userId={auth.user ? auth.user.id : '0'} />
                                             <Bookmark.Button />
                                         </div>
                                     </div>

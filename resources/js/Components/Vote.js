@@ -3,12 +3,12 @@ import { FaSortDown, FaSortUp } from "react-icons/fa";
 import axios from "axios";
 import { Inertia } from "@inertiajs/inertia";
 
-export default function Vote({ article, userId, classNameVote = "", classNameVoteButton = "" }) {
+export default function Vote({ post, typePost, userId, classNameVote = "text-3xl text-center", classNameVoteButton = "text-4xl" }) {
     const [numberOfVotes, setNumberOfVotes] = useState({default: 0, current: 0})
     const [iconColor, setIconColor] = useState(["gray", "gray"])
 
     useEffect(() => {
-        axios.get(`/vote/${article.id}`)
+        axios.get(`/vote/${typePost}/${post.id}`)
             .then(res => {
                 const [upIds, downIds] = res.data
 
@@ -37,7 +37,8 @@ export default function Vote({ article, userId, classNameVote = "", classNameVot
     }, [])
 
     const handleUpVote = () => {
-        if (article.user_id != userId) {
+        console.log(typePost);
+        if (post.user_id != userId) {
             if (iconColor[0] == "gray") {
                 setIconColor(["black", "gray"])
                 setNumberOfVotes({
@@ -52,7 +53,7 @@ export default function Vote({ article, userId, classNameVote = "", classNameVot
                     current: numberOfVotes.current - 1
                 })
             }
-            axios.post(`/vote/up/${article.id}`, { article_id: article.id })
+            axios.post(`/vote/up/${typePost}/${post.id}`, { post_id: post.id })
                 .then((res) => {
                     if (res.data == "ok") console.log("UpVote thành công")
                     else Inertia.get(res.data)
@@ -62,8 +63,8 @@ export default function Vote({ article, userId, classNameVote = "", classNameVot
     }
 
     const handleDownVote = () => {
-        if (article.user_id != userId) {
-            if (article.user_id != userId) {
+        if (post.user_id != userId) {
+            if (post.user_id != userId) {
                 if (iconColor[1] == "gray") {
                     setIconColor(["gray", "black"])
                     setNumberOfVotes({
@@ -78,7 +79,7 @@ export default function Vote({ article, userId, classNameVote = "", classNameVot
                         current: numberOfVotes.current + 1
                     })
                 }
-                axios.post(`/vote/down/${article.id}`, { article_id: article.id })
+                axios.post(`/vote/down/${typePost}/${post.id}`, { post_id: post.id })
                     .then((res) => {
                         if (res.data == "ok") console.log("DownVote thành công")
                         else Inertia.get(res.data)
@@ -90,14 +91,14 @@ export default function Vote({ article, userId, classNameVote = "", classNameVot
 
     return (
         <div>
-            <div className={`text-3xl text-center ${classNameVote}`}>
-                <div className={`text-4xl cursor-pointer ${classNameVoteButton}`} onClick={handleUpVote}>
+            <div className={classNameVote}>
+                <div className={`cursor-pointer ${classNameVoteButton}`} onClick={handleUpVote}>
                     <FaSortUp color={iconColor[0]}/> 
                 </div>
                 <div style={{color: iconColor.includes("black") ? "black" : "gray"}}>
                 { numberOfVotes.current > 0 ? "+" + numberOfVotes.current : numberOfVotes.current } 
                 </div>
-                <div className={`text-4xl cursor-pointer ${classNameVoteButton}`} onClick={handleDownVote}>
+                <div className={`cursor-pointer ${classNameVoteButton}`} onClick={handleDownVote}>
                     <FaSortDown color={iconColor[1]} className="hover:text-black"/>
                 </div>
             </div>

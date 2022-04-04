@@ -43,4 +43,12 @@ class Comment extends Model
 
         return $replies;
     }
+
+    public function upvote_users() {
+        return $this->belongsToMany(User::class, 'vote_users_comments', 'upvote_user_id', 'comment_id')->withTimestamps();
+    }
+
+    public function downvote_users() {
+        return $this->belongsToMany(User::class, 'vote_users_comments', 'downvote_user_id', 'comment_id')->withTimestamps();
+    }
 }

@@ -1,8 +1,8 @@
 <?php
 
+use App\Http\Controllers\Article\BookmarkController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\BookmarkController;
 
 Route::post("/", [BookmarkController::class, 'store'])->name('store');
 
