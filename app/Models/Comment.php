@@ -45,10 +45,10 @@ class Comment extends Model
     }
 
     public function upvote_users() {
-        return $this->belongsToMany(User::class, 'vote_users_comments', 'upvote_user_id', 'comment_id')->withTimestamps();
+        return $this->belongsToMany(User::class, 'vote_users_comments', 'comment_id', 'upvote_user_id')->withTimestamps();
     }
 
     public function downvote_users() {
-        return $this->belongsToMany(User::class, 'vote_users_comments', 'downvote_user_id', 'comment_id')->withTimestamps();
+        return $this->belongsToMany(User::class, 'vote_users_comments', 'comment_id', 'downvote_user_id')->withTimestamps();
     }
 }
