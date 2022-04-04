@@ -11,9 +11,7 @@ export default function Vote({ post, typePost, userId, classNameVote = "text-3xl
         axios.get(`/vote/${typePost}/${post.id}`)
             .then(res => {
                 const [upIds, downIds] = res.data
-
-                console.log("1 cái gì đó");
-
+                
                 const votes = {
                     current: upIds.length - downIds.length,
                     default: upIds.length - downIds.length
